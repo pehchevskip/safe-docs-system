@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Safe Docs System Backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="Safe Docs System - Backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="api" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.pehchevskip.safedocssystem.Application" />
     <option name="ALTERNATIVE_JRE_PATH" />

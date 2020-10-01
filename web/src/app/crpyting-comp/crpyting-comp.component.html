@@ -1,0 +1,16 @@
+<p-fileUpload #privateKeyUpload
+              chooseLabel="Private key"
+              [customUpload]="true"
+              [showUploadButton]="false">
+</p-fileUpload>
+<br/>
+
+<p-fileUpload #fileUpload
+              chooseLabel="Encrypted document"
+              [customUpload]="true"
+              [showUploadButton]="false">
+</p-fileUpload>
+
+<br/><br/>
+
+<p-button label="Decrypt" (onClick)="decrypt()"></p-button>
