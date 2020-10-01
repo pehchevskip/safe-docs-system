@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.pehchevskip</groupId>
     <artifactId>safe-docs-system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>api</artifactId>
@@ -16,7 +16,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java-version>11</java-version>
-    <frontend-bundle-dir>${project.parent.basedir}/frontend/dist/safe-docs-system/</frontend-bundle-dir>
+    <frontend-bundle-dir>${project.parent.basedir}/web/dist/safe-docs-system/</frontend-bundle-dir>
     <start-class>com.pehchevskip.safedocssystem.Application</start-class>
   </properties>
 

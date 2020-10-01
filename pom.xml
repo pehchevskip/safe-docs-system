@@ -12,7 +12,7 @@
 
     <groupId>com.pehchevskip</groupId>
     <artifactId>safe-docs-system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Safe Docs System</name>
