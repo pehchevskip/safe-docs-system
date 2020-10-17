@@ -1,13 +1,14 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FileUpload } from 'primeng/fileupload';
-import { CryptService } from '../service/crypt.service';
+
+import { CryptService } from '../../service/crypt.service';
 
 @Component({
-  selector: 'app-crpyting-comp',
-  templateUrl: './crpyting-comp.component.html',
-  styleUrls: ['./crpyting-comp.component.sass']
+  selector: 'app-crypting-comp',
+  templateUrl: './crypting.component.html',
+  styleUrls: ['./crypting.component.sass']
 })
-export class CrpytingCompComponent {
+export class CryptingComponent {
 
   @ViewChild('fileUpload') fileUpload: FileUpload;
   @ViewChild('privateKeyUpload') privateKeyUpload: FileUpload;

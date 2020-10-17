@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUpload } from 'primeng/fileupload';
-import { environment } from '../../environments/environment';
+
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-upload-docs-form',
@@ -19,11 +21,13 @@ export class UploadDocsFormComponent implements OnInit {
 
   disableUploadButton = true;
 
-  constructor(private http: HttpClient) {
+  constructor(private authService: AuthService,
+              private http: HttpClient) {
   }
 
   ngOnInit() {
     this.apiUrl = environment.apiUrl;
+    this.creatorUsername = this.authService.getLoggedInUsername();
   }
 
   uploadDocument() {

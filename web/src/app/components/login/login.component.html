@@ -1,0 +1,26 @@
+<div class="centered container col-lg-6">
+
+    <div class="card">
+        <div class="card-body">
+            <form class="form-group" (keyup.enter)="handleLogin()">
+                <div class="alert alert-warning" *ngIf='invalidLogin'>{{ errorMessage }}</div>
+                <div class="alert alert-success" *ngIf='loginSuccess'>{{ successMessage }}</div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input class="form-control" id="username" name="username" [(ngModel)]="username" autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" autocomplete>
+                </div>
+
+                <p-button label="Login" (onClick)="handleLogin()"></p-button>
+            </form>
+        </div>
+    </div>
+
+    <app-loading-layer [visible]="loadingLayerVisible"></app-loading-layer>
+
+</div>
