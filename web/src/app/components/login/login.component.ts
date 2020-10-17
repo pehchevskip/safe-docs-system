@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 
 import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+  styleUrls: [ './login.component.sass' ]
 })
 export class LoginComponent implements OnInit {
 
@@ -17,7 +17,9 @@ export class LoginComponent implements OnInit {
   successMessage: string;
   invalidLogin = false;
   loginSuccess = false;
-  loadingLayerVisible = true;
+  spinnerVisible = false;
+
+  @ViewChild('usernameInput', { static: true }) usernameInput: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -30,18 +32,29 @@ export class LoginComponent implements OnInit {
         this.navigateToHome();
       }
     });
+    this.usernameInput.nativeElement.focus();
   }
 
   handleLogin() {
-    this.authService.doLogin(this.username, this.password).subscribe((response) => {
-      this.invalidLogin = false;
-      this.loginSuccess = true;
-      this.successMessage = 'Login successful';
-      this.navigateToHome();
-    }, (error) => {
-      this.invalidLogin = true;
-      this.loginSuccess = false;
-    });
+    if (this.spinnerVisible) {
+      return;
+    }
+    this.spinnerVisible = true;
+    this.invalidLogin = false;
+
+    this.authService.doLogin(this.username, this.password)
+      .pipe(
+        finalize(() => this.spinnerVisible = false)
+      )
+      .subscribe((response) => {
+        this.invalidLogin = false;
+        this.loginSuccess = true;
+        this.successMessage = 'Login successful';
+        this.navigateToHome();
+      }, (error) => {
+        this.invalidLogin = true;
+        this.loginSuccess = false;
+      });
   }
 
   private navigateToHome() {

@@ -7,7 +7,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FileUploadModule } from 'primeng/fileupload';
 import { BlockUIModule } from 'primeng/blockui';
-import { SpinnerModule } from 'primeng/spinner';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { AppComponent } from './app.component';
 import { CryptingComponent } from './components/crypting/crypting.component';
@@ -17,7 +17,6 @@ import { HomeComponent } from './components/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpInterceptorService } from './service/http-interceptor.service';
 import { HeaderComponent } from './components/header/header.component';
-import { LoadingLayerComponent } from './components/loading-layer/loading-layer.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +25,7 @@ import { LoadingLayerComponent } from './components/loading-layer/loading-layer.
     UploadDocsFormComponent,
     LoginComponent,
     HomeComponent,
-    HeaderComponent,
-    LoadingLayerComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +37,7 @@ import { LoadingLayerComponent } from './components/loading-layer/loading-layer.
     FileUploadModule,
     TabViewModule,
     BlockUIModule,
-    SpinnerModule
+    ProgressSpinnerModule
   ],
   providers: [
     {
