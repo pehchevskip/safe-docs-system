@@ -1,5 +1,6 @@
 package com.pehchevskip.safedocssystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,10 @@ public class User {
 
   @Column(unique = true)
   private String username;
+
+  @Column
+  @JsonIgnore
+  private String password;
 
   @Lob
   private byte[] publicKey;

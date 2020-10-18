@@ -2,9 +2,13 @@ package com.pehchevskip.safedocssystem.controller;
 
 import com.pehchevskip.safedocssystem.model.User;
 import com.pehchevskip.safedocssystem.service.UserService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,13 +27,15 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public User getUserById(@PathVariable Long id) throws NotFoundException {
+  public User getUserById(@PathVariable Long id) {
     return userService.getUserById(id);
   }
 
   @PostMapping
-  public User saveUser(@RequestParam String username, @RequestParam MultipartFile publicKeyPem) throws IOException {
-    return userService.saveNewUser(username, publicKeyPem);
+  public User saveUser(@RequestParam String username,
+                       @RequestParam String password,
+                       @RequestParam MultipartFile publicKeyPem) throws IOException {
+    return userService.saveNewUser(username, password, publicKeyPem);
   }
 
 }
