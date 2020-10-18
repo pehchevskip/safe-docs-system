@@ -39,7 +39,7 @@ public class CryptService {
     byte[] encryptedContent = encrypt(file, sharedToUsername);
     User creator = userService.getUserByUsername(creatorUsername);
     User sharedTo = userService.getUserByUsername(sharedToUsername);
-    encryptedDocumentService.saveEncryptedDocument(encryptedContent, creator, sharedTo);
+    encryptedDocumentService.saveEncryptedDocument(file.getOriginalFilename(), encryptedContent, creator, sharedTo);
   }
 
   public byte[] encrypt(MultipartFile file, String username) throws InvalidKeySpecException, BadPaddingException, InvalidKeyException, IllegalBlockSizeException, NoSuchAlgorithmException, IOException, NotFoundException {

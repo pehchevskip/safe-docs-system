@@ -32,8 +32,8 @@ public class EncryptedDocumentService {
     return encryptedDocumentRepository.findBySharedTo(user);
   }
 
-  public EncryptedDocument saveEncryptedDocument(byte[] content, User creator, User sharedTo) {
-    return encryptedDocumentRepository.save(new EncryptedDocument(null, content, creator, sharedTo));
+  public EncryptedDocument saveEncryptedDocument(String filename, byte[] content, User creator, User sharedTo) {
+    return encryptedDocumentRepository.save(new EncryptedDocument(null, filename, content, creator, sharedTo));
   }
 
 }
