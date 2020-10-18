@@ -14,7 +14,6 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
   errorMessage = 'Invalid username or password';
-  successMessage: string;
   invalidLogin = false;
   loginSuccess = false;
   spinnerVisible = false;
@@ -49,9 +48,9 @@ export class LoginComponent implements OnInit {
       .subscribe((response) => {
         this.invalidLogin = false;
         this.loginSuccess = true;
-        this.successMessage = 'Login successful';
         this.navigateToHome();
-      }, (error) => {
+      }, (error: Error) => {
+        this.errorMessage = error.message;
         this.invalidLogin = true;
         this.loginSuccess = false;
       });

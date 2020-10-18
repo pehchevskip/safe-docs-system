@@ -1,0 +1,42 @@
+<div class="centered container col-lg-6">
+
+    <div class="card">
+        <div class="card-body">
+            <form class="form-group" (keyup.enter)="handleRegister()">
+                <div class="alert alert-warning" *ngIf='invalidRegisterCall'>{{ errorMessage }}</div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input #usernameInput class="form-control" id="username" name="username" [(ngModel)]="username" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password"
+                           autocomplete>
+                </div>
+
+                <app-file-upload [placeholder]="filePlaceholder" (fileChange)="handleFileInput($event)"></app-file-upload>
+                <br/>
+
+                <p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner>
+                <br/>
+
+                <div class="flex-wrapper">
+                    <p-button label="Back"
+                              class="almost-half-width"
+                              styleClass="full-width p-button-secondary"
+                              (onClick)="navigateToLogin()">
+                    </p-button>
+                    <p-button label="Register"
+                              class="almost-half-width"
+                              styleClass="full-width"
+                              [disabled]="spinnerVisible"
+                              (onClick)="handleRegister()">
+                    </p-button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

@@ -2,8 +2,11 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div><a href="/home" class="navbar-brand">Safe Docs System</a></div>
         <ul class="navbar-nav navbar-collapse justify-content-end">
-            <li>
-                <a *ngIf="isLoggedIn" class="nav-link" routerLink="/logout" (click)=handleLogout()>Logout</a>
+            <li *ngIf="isLoggedIn">
+                <a class="nav-link" routerLink="/logout" (click)="handleLogout()">Logout</a>
+            </li>
+            <li *ngIf="!isLoggedIn">
+                <a class="nav-link white" routerLink="/register">Register</a>
             </li>
         </ul>
     </nav>

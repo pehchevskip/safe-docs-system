@@ -17,6 +17,8 @@ import { HomeComponent } from './components/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpInterceptorService } from './service/http-interceptor.service';
 import { HeaderComponent } from './components/header/header.component';
+import { RegisterComponent } from './components/register/register.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { HeaderComponent } from './components/header/header.component';
     UploadDocsFormComponent,
     LoginComponent,
     HomeComponent,
-    HeaderComponent
+    HeaderComponent,
+    RegisterComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,

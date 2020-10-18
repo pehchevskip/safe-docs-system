@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -20,6 +20,22 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
+  doRegister(username: string, password: string, file: File) {
+    this.apiUrl = environment.apiUrl;
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('publicKeyPem', file);
+    return this.http.post(this.apiUrl + '/users', formData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return throwError(new Error('The provided credentials are invalid.'));
+        }
+        return throwError(new Error('A server error happened.'));
+      }),
+    );
+  }
+
   doLogin(username: string, password: string) {
     this.apiUrl = environment.apiUrl;
     return this.http.post(this.apiUrl + '/login', null, {
@@ -27,15 +43,24 @@ export class AuthService {
         authorization: AuthService.createBasicAuthToken(username, password)
       },
       responseType: 'text'
-    }).pipe(map(() => {
-      this.username = username;
-      this.password = password;
-      this.registerSuccessfulLogin(username);
-    }));
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return throwError(new Error('The provided credentials are invalid.'));
+        }
+        return throwError(new Error('A server error happened.'));
+      }),
+      switchMap((response) => {
+        this.username = username;
+        this.password = password;
+        this.registerSuccessfulLogin(username);
+        return of({});
+      })
+    );
   }
 
   static createBasicAuthToken(username: string, password: string) {
-    return 'Basic ' + window.btoa(`${username}:${password}`);
+    return 'Basic ' + window.btoa(`${ username }:${ password }`);
   }
 
   private registerSuccessfulLogin(username: string) {
