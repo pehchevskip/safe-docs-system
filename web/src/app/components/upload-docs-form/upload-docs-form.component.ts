@@ -21,6 +21,8 @@ export class UploadDocsFormComponent implements OnInit {
 
   disableUploadButton = true;
 
+  private documentFile: File = null;
+
   constructor(private authService: AuthService,
               private http: HttpClient) {
   }
@@ -31,7 +33,7 @@ export class UploadDocsFormComponent implements OnInit {
   }
 
   uploadDocument() {
-    const file = this.fileUpload.files[0];
+    const file = this.documentFile;
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('creatorUsername', this.creatorUsername);
@@ -43,7 +45,7 @@ export class UploadDocsFormComponent implements OnInit {
   }
 
   checkIfUploadButtonShouldBeDisabled() {
-    this.disableUploadButton = !(this.fileUpload.files.length > 0 && this.creatorUsername.length > 0 && this.sharedToUsername.length > 0);
+    this.disableUploadButton = !(this.documentFile && this.creatorUsername.length > 0 && this.sharedToUsername.length > 0);
   }
 
   // saveInLocalStorage(blob: Blob) {
@@ -55,4 +57,8 @@ export class UploadDocsFormComponent implements OnInit {
   //   fileReader.readAsDataURL(blob);
   // }
 
+  handleDocumentFileInput(files: FileList) {
+    this.documentFile = files.item(0);
+    this.checkIfUploadButtonShouldBeDisabled();
+  }
 }

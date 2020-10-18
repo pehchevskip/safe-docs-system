@@ -16,7 +16,9 @@
                            autocomplete>
                 </div>
 
-                <app-file-upload [placeholder]="filePlaceholder" (fileChange)="handleFileInput($event)"></app-file-upload>
+                <app-file-upload placeholder="Choose a public key PEM file"
+                                 (fileChange)="handleFileInput($event)">
+                </app-file-upload>
                 <br/>
 
                 <p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner>

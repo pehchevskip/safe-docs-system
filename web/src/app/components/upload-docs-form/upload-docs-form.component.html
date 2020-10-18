@@ -1,16 +1,6 @@
 <br/>
 <div class="container">
 
-  <p-fileUpload #fileUpload
-                chooseLabel="File"
-                [customUpload]="true"
-                [showUploadButton]="false"
-                (onSelect)="checkIfUploadButtonShouldBeDisabled()"
-                (onClear)="checkIfUploadButtonShouldBeDisabled()"
-                (onRemove)="checkIfUploadButtonShouldBeDisabled()">
-  </p-fileUpload>
-  <br/>
-
   <div class="form-group">
     <label>Creator username:</label>
     <input type="text"
@@ -26,6 +16,11 @@
            [(ngModel)]="sharedToUsername"
            (ngModelChange)="checkIfUploadButtonShouldBeDisabled()">
   </div>
+
+  <app-file-upload placeholder="Choose a document"
+                   (fileChange)="handleDocumentFileInput($event)">
+  </app-file-upload>
+  <br/>
 
   <p-button label="Upload" [disabled]="disableUploadButton" (onClick)="uploadDocument()"></p-button>
 

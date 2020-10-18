@@ -1,16 +1,11 @@
-<p-fileUpload #privateKeyUpload
-              chooseLabel="Private key"
-              [customUpload]="true"
-              [showUploadButton]="false">
-</p-fileUpload>
+<app-file-upload placeholder="Choose a private key PEM file"
+                 (fileChange)="handlePrivateKeyFileInput($event)">
+</app-file-upload>
 <br/>
 
-<p-fileUpload #fileUpload
-              chooseLabel="Encrypted document"
-              [customUpload]="true"
-              [showUploadButton]="false">
-</p-fileUpload>
-
-<br/><br/>
+<app-file-upload placeholder="Choose an encrypted document"
+                 (fileChange)="handleEncryptedDocumentFileInput($event)">
+</app-file-upload>
+<br/>
 
 <p-button label="Decrypt" (onClick)="decrypt()"></p-button>

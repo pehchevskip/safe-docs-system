@@ -20,7 +20,6 @@ export class RegisterComponent implements OnInit {
 
   errorMessage: string;
 
-  filePlaceholder = 'Choose Public Key PEM file';
   private file: File = null;
 
   @ViewChild('usernameInput', { static: true }) usernameInput: ElementRef;

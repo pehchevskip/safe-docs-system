@@ -1,5 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { FileUpload } from 'primeng/fileupload';
+import { Component} from '@angular/core';
 
 import { CryptService } from '../../service/crypt.service';
 
@@ -10,10 +9,10 @@ import { CryptService } from '../../service/crypt.service';
 })
 export class CryptingComponent {
 
-  @ViewChild('fileUpload') fileUpload: FileUpload;
-  @ViewChild('privateKeyUpload') privateKeyUpload: FileUpload;
-
   privateKey: string;
+
+  private privateKeyFile: File = null;
+  private encryptedDocumentFile: File = null;
 
   constructor(private cryptService: CryptService) {
   }
@@ -42,7 +41,7 @@ export class CryptingComponent {
       document.body.removeChild(link);
     };
     setTimeout(() => {
-      reader.readAsBinaryString(this.fileUpload.files[0]);
+      reader.readAsBinaryString(this.encryptedDocumentFile);
     }, 1500);
   }
 
@@ -51,7 +50,14 @@ export class CryptingComponent {
     reader.onload = () => {
       this.privateKey = reader.result as string;
     };
-    reader.readAsText(this.privateKeyUpload.files[0]);
+    reader.readAsText(this.privateKeyFile);
   }
 
+  handlePrivateKeyFileInput(files: FileList) {
+    this.privateKeyFile = files.item(0);
+  }
+
+  handleEncryptedDocumentFileInput(files: FileList) {
+    this.encryptedDocumentFile = files.item(0);
+  }
 }
