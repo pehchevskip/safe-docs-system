@@ -2,23 +2,39 @@
 
     <div class="card">
         <div class="card-body">
-            <form class="form-group" (keyup.enter)="handleLogin()">
+            <form #loginForm class="form-group" (keyup.enter)="handleLogin()">
                 <div class="alert alert-warning" *ngIf='invalidLogin'>{{ errorMessage }}</div>
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input #usernameInput class="form-control" id="username" name="username" [(ngModel)]="username" autocomplete="off">
+                    <input #usernameInput
+                           [(ngModel)]="username"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           autocomplete="off"
+                           required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" autocomplete>
+                    <input [(ngModel)]="password"
+                           type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           autocomplete
+                           required>
                 </div>
+
+                <app-file-upload placeholder="Choose your private key PEM file"
+                                 (fileChange)="handlePrivateKeyFileInput($event)">
+                </app-file-upload>
 
                 <p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner><br/>
                 <p-button label="Login"
                           styleClass="full-width"
-                          [disabled]="spinnerVisible"
+                          [disabled]="spinnerVisible || !loginForm.checkValidity()"
                           (onClick)="handleLogin()">
                 </p-button>
             </form>

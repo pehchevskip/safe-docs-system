@@ -8,18 +8,19 @@ export class CryptService {
     const extractedEsk = file.substr(0, 256);
     const remainingFile = file.substr(256);
 
-    const privateKey = forge.pki.privateKeyFromPem(privateKeyStr);
-    const symmetricKey = forge.util.bytesToHex(privateKey.decrypt(extractedEsk));
+    try {
+      const privateKey = forge.pki.privateKeyFromPem(privateKeyStr);
+      const symmetricKey = forge.util.bytesToHex(privateKey.decrypt(extractedEsk));
 
-    const cipher = forge.cipher.createDecipher('AES-ECB', forge.util.hexToBytes(symmetricKey));
-    cipher.start();
-    cipher.update(forge.util.createBuffer(remainingFile));
-    cipher.finish();
+      const cipher = forge.cipher.createDecipher('AES-ECB', forge.util.hexToBytes(symmetricKey));
+      cipher.start();
+      cipher.update(forge.util.createBuffer(remainingFile));
+      cipher.finish();
 
-    console.log('length: ', file.length);
-    console.log('file length: ', cipher.output.length());
-    console.log('content\n', cipher.output.toHex());
-    return cipher.output.toHex();
+      return cipher.output.toHex();
+    } catch (error) {
+      throw error;
+    }
   }
 
   hexToBinaryArray(hex: string): number[] {

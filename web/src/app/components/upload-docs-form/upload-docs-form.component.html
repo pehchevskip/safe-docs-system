@@ -1,27 +1,24 @@
 <br/>
 <div class="container">
+  <div class="alert alert-success" *ngIf='uploadSuccess'>File uploaded.</div>
+  <div class="alert alert-danger" *ngIf='uploadError'>Upload error.</div>
 
-  <div class="form-group">
-    <label>Creator username:</label>
-    <input type="text"
-           class="form-control"
-           [(ngModel)]="creatorUsername"
-           (ngModelChange)="checkIfUploadButtonShouldBeDisabled()">
-  </div>
+  <form #uploadForm>
+    <div class="form-group">
+      <label>Share to username:</label>
+      <input [(ngModel)]="sharedToUsername"
+             name="sharedToUsername"
+             type="text"
+             class="form-control"
+             required>
+    </div>
 
-  <div class="form-group">
-    <label>Share to username:</label>
-    <input type="text"
-           class="form-control"
-           [(ngModel)]="sharedToUsername"
-           (ngModelChange)="checkIfUploadButtonShouldBeDisabled()">
-  </div>
+    <app-file-upload placeholder="Choose a document"
+                     (fileChange)="handleDocumentFileInput($event)">
+    </app-file-upload>
+    <br/>
 
-  <app-file-upload placeholder="Choose a document"
-                   (fileChange)="handleDocumentFileInput($event)">
-  </app-file-upload>
-  <br/>
-
-  <p-button label="Upload" [disabled]="disableUploadButton" (onClick)="uploadDocument()"></p-button>
-
+    <p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner><br/>
+    <p-button label="Upload" [disabled]="spinnerVisible || !uploadForm.checkValidity()" (onClick)="uploadDocument()"></p-button>
+  </form>
 </div>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FileUpload } from 'primeng/fileupload';
+import { Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../service/auth.service';
@@ -12,14 +12,14 @@ import { AuthService } from '../../service/auth.service';
 })
 export class UploadDocsFormComponent implements OnInit {
 
-  @ViewChild('fileUpload') fileUpload: FileUpload;
-
   apiUrl: string;
+  spinnerVisible = false;
 
-  creatorUsername: string;
+  uploadSuccess = false;
+  uploadError = false;
+
   sharedToUsername: string;
-
-  disableUploadButton = true;
+  private creatorUsername: string;
 
   private documentFile: File = null;
 
@@ -38,27 +38,25 @@ export class UploadDocsFormComponent implements OnInit {
     formData.append('file', file, file.name);
     formData.append('creatorUsername', this.creatorUsername);
     formData.append('sharedToUsername', this.sharedToUsername);
-    this.http.post(this.apiUrl + '/crypt/encrypt', formData).subscribe(
-      () => alert('Uploaded'),
-      () => alert('Error')
+
+    this.spinnerVisible = true;
+    this.uploadSuccess = false;
+    this.uploadError = false;
+    this.http.post(this.apiUrl + '/crypt/encrypt', formData).pipe(
+      finalize(() => this.spinnerVisible = false)
+    ).subscribe(
+      () => {
+        this.uploadSuccess = true;
+        this.uploadError = false;
+      },
+      () => {
+        this.uploadSuccess = false;
+        this.uploadError = true;
+      }
     );
   }
 
-  checkIfUploadButtonShouldBeDisabled() {
-    this.disableUploadButton = !(this.documentFile && this.creatorUsername.length > 0 && this.sharedToUsername.length > 0);
-  }
-
-  // saveInLocalStorage(blob: Blob) {
-  //   const fileReader = new FileReader();
-  //   fileReader.onload = () => {
-  //     // @ts-ignore
-  //     localStorage.setItem('file', fileReader.result);
-  //   };
-  //   fileReader.readAsDataURL(blob);
-  // }
-
   handleDocumentFileInput(files: FileList) {
     this.documentFile = files.item(0);
-    this.checkIfUploadButtonShouldBeDisabled();
   }
 }

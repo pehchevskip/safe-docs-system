@@ -3,13 +3,18 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { clearFileInLocalStorage, localStorageKeys, saveFileInLocalStorage } from '../utils/local-storage.utils';
+import { isNilOrEmpty } from '../utils/string.utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser';
+  private sessionStorageKeys = {
+    authenticatedUsername: 'authenticatedUsername',
+    authenticatedPassword: 'authenticatedPassword'
+  };
 
   username: string;
   password: string;
@@ -36,7 +41,7 @@ export class AuthService {
     );
   }
 
-  doLogin(username: string, password: string) {
+  doLogin(username: string, password: string, privateKeyFile: File) {
     this.apiUrl = environment.apiUrl;
     return this.http.post(this.apiUrl + '/login', null, {
       headers: {
@@ -51,9 +56,7 @@ export class AuthService {
         return throwError(new Error('A server error happened.'));
       }),
       switchMap((response) => {
-        this.username = username;
-        this.password = password;
-        this.registerSuccessfulLogin(username);
+        this.registerSuccessfulLogin(username, password, privateKeyFile);
         return of({});
       })
     );
@@ -63,31 +66,36 @@ export class AuthService {
     return 'Basic ' + window.btoa(`${ username }:${ password }`);
   }
 
-  private registerSuccessfulLogin(username: string) {
-    sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username);
+  private registerSuccessfulLogin(username: string, password: string, privateKeyFile: File) {
+    this.username = username;
+    this.password = password;
+
+    saveFileInLocalStorage(localStorageKeys.privateKeyFile, privateKeyFile);
+    sessionStorage.setItem(this.sessionStorageKeys.authenticatedUsername, username);
+    sessionStorage.setItem(this.sessionStorageKeys.authenticatedPassword, password);
     this.isLoggedIn.next(true);
   }
 
   logout() {
-    sessionStorage.removeItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
+    clearFileInLocalStorage(localStorageKeys.privateKeyFile);
+    sessionStorage.removeItem(this.sessionStorageKeys.authenticatedUsername);
+    sessionStorage.removeItem(this.sessionStorageKeys.authenticatedPassword);
     this.username = null;
     this.password = null;
     this.isLoggedIn.next(false);
   }
 
   get isUserLoggedIn(): Observable<boolean> {
-    const user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    const isLoggedIn = !AuthService.isNilOrEmpty(this.password) && (user !== null);
+    this.username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
+    this.password = sessionStorage.getItem(this.sessionStorageKeys.authenticatedPassword);
+
+    const isLoggedIn = !isNilOrEmpty(this.username) && !isNilOrEmpty(this.password);
     this.isLoggedIn.next(isLoggedIn);
     return this.isLoggedIn.asObservable();
   }
 
-  private static isNilOrEmpty(val: string) {
-    return val === null || val === undefined || val.length === 0;
-  }
-
   getLoggedInUsername() {
-    const user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    return user || '';
+    const username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
+    return username || '';
   }
 }

@@ -2,18 +2,29 @@
 
     <div class="card">
         <div class="card-body">
-            <form class="form-group" (keyup.enter)="handleRegister()">
+            <form #registerForm class="form-group" (keyup.enter)="handleRegister()">
                 <div class="alert alert-warning" *ngIf='invalidRegisterCall'>{{ errorMessage }}</div>
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input #usernameInput class="form-control" id="username" name="username" [(ngModel)]="username" autocomplete="off">
+                    <input #usernameInput
+                           [(ngModel)]="username"
+                           class="form-control"
+                           id="username"
+                           name="username"
+                           autocomplete="off"
+                           required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password"
-                           autocomplete>
+                    <input [(ngModel)]="password"
+                           type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           autocomplete
+                           required>
                 </div>
 
                 <app-file-upload placeholder="Choose a public key PEM file"
@@ -33,7 +44,7 @@
                     <p-button label="Register"
                               class="almost-half-width"
                               styleClass="full-width"
-                              [disabled]="spinnerVisible"
+                              [disabled]="spinnerVisible || !registerForm.checkValidity()"
                               (onClick)="handleRegister()">
                     </p-button>
                 </div>

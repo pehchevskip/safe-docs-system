@@ -1,5 +1,9 @@
 <div class="custom-file">
-    <input #fileInput type="file" class="custom-file-input" id="customFile" (change)="handleFileInput($event.target.files)">
+    <input #fileInput type="file"
+           class="custom-file-input"
+           id="customFile"
+           (change)="handleFileInput($event.target.files)"
+           [required]="required">
     <label class="custom-file-label" for="customFile">{{ placeholder }}</label>
 </div>
 <br/>

@@ -1,6 +1,8 @@
 import { Component} from '@angular/core';
 
 import { CryptService } from '../../service/crypt.service';
+import { getFileFromLocalStorageAsText, localStorageKeys } from '../../utils/local-storage.utils';
+import { isNilOrEmpty } from '../../utils/string.utils';
 
 @Component({
   selector: 'app-crypting-comp',
@@ -10,27 +12,51 @@ import { CryptService } from '../../service/crypt.service';
 export class CryptingComponent {
 
   privateKey: string;
+  encryptedDocumentFile: File = null;
 
-  private privateKeyFile: File = null;
-  private encryptedDocumentFile: File = null;
+  decryptingSuccess = false;
+  decryptingError = false;
+  privateKeyError = false;
+  spinnerVisible = false;
 
   constructor(private cryptService: CryptService) {
   }
 
   decrypt() {
-    this.readPrivateKey();
+    this.decryptingSuccess = false;
+    this.decryptingError = false;
+    this.privateKeyError = false;
+    this.spinnerVisible = true;
+
+    if (!this.readPrivateKey()) {
+      this.privateKeyError = true;
+      this.spinnerVisible = false;
+      return;
+    }
+
+    if (this.encryptedDocumentFile.size < 256) {
+      this.decryptingError = true;
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = () => {
       const buffer = reader.result;
 
-      const resultHex = this.cryptService.decrypt(this.privateKey, buffer as string);
+      let resultHex;
+      try {
+        resultHex = this.cryptService.decrypt(this.privateKey, buffer as string);
+      } catch (error) {
+        this.decryptingError = true;
+        this.spinnerVisible = false;
+        return;
+      }
       const binaryArray = this.cryptService.hexToBinaryArray(resultHex);
 
       const byteArray = new Uint8Array(binaryArray);
       const blob = new Blob([ byteArray ], { type: 'application/octet-stream' });
 
-      const fileName = '';
+      const fileName = 'decrypted-document';
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
@@ -39,22 +65,16 @@ export class CryptingComponent {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      this.decryptingSuccess = true;
+      this.spinnerVisible = false;
     };
-    setTimeout(() => {
-      reader.readAsBinaryString(this.encryptedDocumentFile);
-    }, 1500);
+    reader.readAsBinaryString(this.encryptedDocumentFile);
   }
 
-  readPrivateKey() {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.privateKey = reader.result as string;
-    };
-    reader.readAsText(this.privateKeyFile);
-  }
-
-  handlePrivateKeyFileInput(files: FileList) {
-    this.privateKeyFile = files.item(0);
+  readPrivateKey(): boolean {
+    this.privateKey = getFileFromLocalStorageAsText(localStorageKeys.privateKeyFile);
+    return !isNilOrEmpty(this.privateKey) && (this.privateKey.indexOf('BEGIN PRIVATE KEY') > 0);
   }
 
   handleEncryptedDocumentFileInput(files: FileList) {

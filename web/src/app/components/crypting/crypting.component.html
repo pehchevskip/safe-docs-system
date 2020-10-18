@@ -1,11 +1,11 @@
-<app-file-upload placeholder="Choose a private key PEM file"
-                 (fileChange)="handlePrivateKeyFileInput($event)">
-</app-file-upload>
-<br/>
+<div class="alert alert-success" *ngIf='decryptingSuccess'>File was decrypted successful.</div>
+<div class="alert alert-danger" *ngIf='decryptingError'>An error happened while decrypting the file.</div>
+<div class="alert alert-danger" *ngIf='privateKeyError'>Invalid private key file. Please logout and try again.</div>
 
 <app-file-upload placeholder="Choose an encrypted document"
                  (fileChange)="handleEncryptedDocumentFileInput($event)">
 </app-file-upload>
 <br/>
 
-<p-button label="Decrypt" (onClick)="decrypt()"></p-button>
+<p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner><br/>
+<p-button label="Decrypt" [disabled]="spinnerVisible || encryptedDocumentFile === null" (onClick)="decrypt()"></p-button>

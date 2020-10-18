@@ -18,7 +18,10 @@ export class LoginComponent implements OnInit {
   loginSuccess = false;
   spinnerVisible = false;
 
-  @ViewChild('usernameInput', { static: true }) usernameInput: ElementRef;
+  @ViewChild('usernameInput', { static: true }) usernameInput: ElementRef<HTMLInputElement>;
+  @ViewChild('loginForm') loginForm: ElementRef<HTMLFormElement>;
+
+  private privateKeyFile: File;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -38,10 +41,21 @@ export class LoginComponent implements OnInit {
     if (this.spinnerVisible) {
       return;
     }
+    if (!this.loginForm.nativeElement.checkValidity()) {
+      this.errorMessage = 'All fields are required.';
+      this.invalidLogin = true;
+      return;
+    }
+    const privateKeyFileType = this.privateKeyFile.type;
+    if ((privateKeyFileType !== 'application/x-x509-ca-cert') && (privateKeyFileType !== 'application/x-pem-file')) {
+      this.errorMessage = 'The provided private key file is not of type PEM.';
+      this.invalidLogin = true;
+      return;
+    }
     this.spinnerVisible = true;
     this.invalidLogin = false;
 
-    this.authService.doLogin(this.username, this.password)
+    this.authService.doLogin(this.username, this.password, this.privateKeyFile)
       .pipe(
         finalize(() => this.spinnerVisible = false)
       )
@@ -60,4 +74,7 @@ export class LoginComponent implements OnInit {
     this.router.navigate([ '/home' ]);
   }
 
+  handlePrivateKeyFileInput(files: FileList) {
+    this.privateKeyFile = files.item(0);
+  }
 }

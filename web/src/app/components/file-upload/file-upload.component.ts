@@ -8,6 +8,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 export class FileUploadComponent implements OnInit, OnDestroy {
 
   @Input() placeholder = 'Choose a file';
+  @Input() required = true;
   @Output() fileChange: EventEmitter<FileList> = new EventEmitter();
 
   @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
