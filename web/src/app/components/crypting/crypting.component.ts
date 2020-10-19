@@ -49,7 +49,7 @@ export class CryptingComponent implements OnInit {
 
   readPrivateKey(): boolean {
     this.privateKey = getFileFromLocalStorageAsText(localStorageKeys.privateKeyFile);
-    return !isNilOrEmpty(this.privateKey) && (this.privateKey.indexOf('BEGIN PRIVATE KEY') > 0);
+    return !isNilOrEmpty(this.privateKey) && (this.privateKey.indexOf('PRIVATE KEY') > 0);
   }
 
   downloadAndDecrypt(encryptedDocument: EncryptedDocument) {

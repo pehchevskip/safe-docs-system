@@ -15,7 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Profile("dev")
+@Profile("!prod")
 @Configuration
 @EnableWebSecurity
 public class BasicAuthDevConfiguration extends WebSecurityConfigurerAdapter {
@@ -26,18 +26,20 @@ public class BasicAuthDevConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .cors().configurationSource(corsConfig())
-        .and()
-        .csrf().disable()
-        .authorizeRequests()
-        .antMatchers(HttpMethod.POST, "/api/users")
-        .permitAll()
-        .antMatchers("/api/**")
-        .authenticated()
-        .antMatchers("/*")
-        .permitAll()
-        .and()
-        .httpBasic();
+            .cors().configurationSource(corsConfig())
+            .and()
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.POST, "/api/login")
+            .permitAll()
+            .antMatchers(HttpMethod.POST, "/api/users")
+            .permitAll()
+            .antMatchers("/api/**")
+            .authenticated()
+            .antMatchers("/*")
+            .permitAll()
+            .and()
+            .httpBasic();
   }
 
   @Override

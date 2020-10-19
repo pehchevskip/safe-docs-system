@@ -23,19 +23,20 @@ public class BasicAuthConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .cors()
-        .and()
-        .csrf()
-        .and()
-        .authorizeRequests()
-        .antMatchers(HttpMethod.POST, "/api/users")
-        .permitAll()
-        .antMatchers("/api/**")
-        .authenticated()
-        .antMatchers("/*")
-        .permitAll()
-        .and()
-        .httpBasic();
+            .cors()
+            .and()
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.POST, "/api/login")
+            .permitAll()
+            .antMatchers(HttpMethod.POST, "/api/users")
+            .permitAll()
+            .antMatchers("/api/**")
+            .authenticated()
+            .antMatchers("/*")
+            .permitAll()
+            .and()
+            .httpBasic();
   }
 
   @Override

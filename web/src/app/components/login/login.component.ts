@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
       this.invalidLogin = true;
       return;
     }
-    const privateKeyFileType = this.privateKeyFile.type;
-    if ((privateKeyFileType !== 'application/x-x509-ca-cert') && (privateKeyFileType !== 'application/x-pem-file')) {
+    const privateKeyFileExtension = LoginComponent.getFileExtension(this.privateKeyFile);
+    if ((privateKeyFileExtension !== 'pem')) {
       this.errorMessage = 'The provided private key file is not of type PEM.';
       this.invalidLogin = true;
       return;
@@ -67,6 +67,12 @@ export class LoginComponent implements OnInit {
         this.invalidLogin = true;
         this.loginSuccess = false;
       });
+  }
+
+  private static getFileExtension(file: File) {
+    const regexAll = /[^\\]*\.(\w+)$/;
+    const splitted = file.name.match(regexAll);
+    return (splitted && splitted.length > 0) ? splitted[1] : splitted[0];
   }
 
   private navigateToHome() {
