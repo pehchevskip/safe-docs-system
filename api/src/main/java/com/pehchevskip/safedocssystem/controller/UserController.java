@@ -1,5 +1,6 @@
 package com.pehchevskip.safedocssystem.controller;
 
+import com.pehchevskip.safedocssystem.dto.UserDto;
 import com.pehchevskip.safedocssystem.model.User;
 import com.pehchevskip.safedocssystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -22,8 +24,10 @@ public class UserController {
   private UserService userService;
 
   @GetMapping
-  public List<User> getAllUsers() {
-    return userService.getAllUsers();
+  public List<UserDto> getAllUsers() {
+    return userService.getAllUsers().stream()
+        .map(user -> new UserDto(user.getId(), user.getUsername()))
+        .collect(Collectors.toList());
   }
 
   @GetMapping("/{id}")
