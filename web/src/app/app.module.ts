@@ -8,6 +8,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FileUploadModule } from 'primeng/fileupload';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { AppComponent } from './app.component';
 import { CryptingComponent } from './components/crypting/crypting.component';
@@ -41,7 +42,8 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     FileUploadModule,
     TabViewModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DropdownModule
   ],
   providers: [
     {

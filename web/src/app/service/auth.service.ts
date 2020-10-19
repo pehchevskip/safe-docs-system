@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+
 import { environment } from '../../environments/environment';
 import { clearFileInLocalStorage, localStorageKeys, saveFileInLocalStorage } from '../utils/local-storage.utils';
 import { isNilOrEmpty } from '../utils/string.utils';
@@ -20,9 +21,12 @@ export class AuthService {
   password: string;
 
   private isLoggedIn = new BehaviorSubject(false);
+  private loggedInUsername = new BehaviorSubject(null);
   private apiUrl: string;
 
   constructor(private http: HttpClient) {
+    const username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
+    this.loggedInUsername.next((username && username.length > 0) ? username : null);
   }
 
   doRegister(username: string, password: string, file: File) {
@@ -73,6 +77,7 @@ export class AuthService {
     saveFileInLocalStorage(localStorageKeys.privateKeyFile, privateKeyFile);
     sessionStorage.setItem(this.sessionStorageKeys.authenticatedUsername, username);
     sessionStorage.setItem(this.sessionStorageKeys.authenticatedPassword, password);
+    this.loggedInUsername.next(username);
     this.isLoggedIn.next(true);
   }
 
@@ -82,20 +87,31 @@ export class AuthService {
     sessionStorage.removeItem(this.sessionStorageKeys.authenticatedPassword);
     this.username = null;
     this.password = null;
+    this.loggedInUsername.next(null);
     this.isLoggedIn.next(false);
   }
 
-  get isUserLoggedIn(): Observable<boolean> {
-    this.username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
-    this.password = sessionStorage.getItem(this.sessionStorageKeys.authenticatedPassword);
+  get isUserLoggedIn(): boolean {
+    return this.checkIfUserIsLoggedIn();
+  }
 
-    const isLoggedIn = !isNilOrEmpty(this.username) && !isNilOrEmpty(this.password);
-    this.isLoggedIn.next(isLoggedIn);
+  get isUserLoggedIn$(): Observable<boolean> {
+    this.isLoggedIn.next(this.checkIfUserIsLoggedIn());
     return this.isLoggedIn.asObservable();
   }
 
-  getLoggedInUsername() {
-    const username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
-    return username || '';
+  private checkIfUserIsLoggedIn(): boolean {
+    this.username = sessionStorage.getItem(this.sessionStorageKeys.authenticatedUsername);
+    this.password = sessionStorage.getItem(this.sessionStorageKeys.authenticatedPassword);
+
+    return !isNilOrEmpty(this.username) && !isNilOrEmpty(this.password);
+  }
+
+  get loggedInUser(): string {
+    return this.loggedInUsername.value;
+  }
+
+  get loggedInUser$(): Observable<string> {
+    return this.loggedInUsername.asObservable();
   }
 }

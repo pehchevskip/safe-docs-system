@@ -1,11 +1,19 @@
 <div class="alert alert-success" *ngIf='decryptingSuccess'>File was decrypted successful.</div>
 <div class="alert alert-danger" *ngIf='decryptingError'>An error happened while decrypting the file.</div>
 <div class="alert alert-danger" *ngIf='privateKeyError'>Invalid private key file. Please logout and try again.</div>
+<div class="alert alert-danger" *ngIf='loadingDocsError'>Failed to load documents for current user.</div>
+<div class="alert alert-info" *ngIf="encryptedDocuments && encryptedDocuments.length === 0">There are no documents shared to you yet.</div>
 
-<app-file-upload placeholder="Choose an encrypted document"
-                 (fileChange)="handleEncryptedDocumentFileInput($event)">
-</app-file-upload>
+<p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner>
 <br/>
-
-<p-progressSpinner *ngIf="spinnerVisible" styleClass="center-spinner"></p-progressSpinner><br/>
-<p-button label="Decrypt" [disabled]="spinnerVisible || encryptedDocumentFile === null" (onClick)="decrypt()"></p-button>
+<div class="list-group" *ngIf="encryptedDocuments && encryptedDocuments.length > 0">
+    <div *ngFor="let encryptedDocument of encryptedDocuments" class="list-group-item flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <span>{{ encryptedDocument.filename }}</span>
+            <p-button label="Download & decrypt"
+                      styleClass="p-button-link p-button-sm"
+                      (onClick)="downloadAndDecrypt(encryptedDocument)">
+            </p-button>
+        </div>
+    </div>
+</div>

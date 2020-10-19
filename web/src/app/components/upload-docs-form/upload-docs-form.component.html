@@ -5,12 +5,13 @@
 
   <form #uploadForm>
     <div class="form-group">
-      <label>Share to username:</label>
-      <input [(ngModel)]="sharedToUsername"
-             name="sharedToUsername"
-             type="text"
-             class="form-control"
-             required>
+      <label>Share to:</label><br/>
+      <p-dropdown [options]="users"
+                  [(ngModel)]="sharedToUser"
+                  name="sharedToUsername"
+                  optionLabel="username"
+                  [required]="true">
+      </p-dropdown>
     </div>
 
     <app-file-upload placeholder="Choose a document"

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../../service/auth.service';
 
@@ -29,11 +29,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.isUserLoggedIn.pipe(take(1)).subscribe(isUserLoggedIn => {
-      if (isUserLoggedIn) {
-        this.navigateToHome();
-      }
-    });
+    const isLoggedIn = this.authService.isUserLoggedIn;
+    if (isLoggedIn) {
+      this.navigateToHome();
+    }
     this.usernameInput.nativeElement.focus();
   }
 

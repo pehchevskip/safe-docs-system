@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
 
 import { AuthService } from '../../service/auth.service';
 
@@ -15,11 +14,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(){
-    this.authService.isUserLoggedIn.pipe(take(1)).subscribe(isUserLoggedIn => {
-      if (!isUserLoggedIn) {
-        this.router.navigate([ '/login' ]);
-      }
-    });
+    const isLoggedIn = this.authService.isUserLoggedIn;
+    if (!isLoggedIn) {
+      this.router.navigate([ '/login' ]);
+    }
   }
 
 }

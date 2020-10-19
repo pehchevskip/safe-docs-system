@@ -3,6 +3,9 @@
         <div><a href="/home" class="navbar-brand">Safe Docs System</a></div>
         <ul class="navbar-nav navbar-collapse justify-content-end">
             <li *ngIf="isLoggedIn">
+                <a class="white">{{ loggedInUser }} |</a>
+            </li>
+            <li *ngIf="isLoggedIn">
                 <a class="nav-link" routerLink="/logout" (click)="handleLogout()">Logout</a>
             </li>
             <li *ngIf="!isLoggedIn">

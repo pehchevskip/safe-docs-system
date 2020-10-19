@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 
@@ -12,16 +11,15 @@ export class HttpInterceptorService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.authService.isUserLoggedIn.pipe(take(1)).subscribe(isUserLoggedIn => {
-      if (isUserLoggedIn && !req.headers.get('Authorization')) {
-        req = req.clone({
-          setHeaders: {
-            Authorization: AuthService.createBasicAuthToken(this.authService.username, this.authService.password)
-          }
-        });
-      }
-      return next.handle(req);
-    });
+    const isLoggedIn = this.authService.isUserLoggedIn;
+
+    if (isLoggedIn && !req.headers.get('Authorization')) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: AuthService.createBasicAuthToken(this.authService.username, this.authService.password)
+        }
+      });
+    }
     return next.handle(req);
   }
 
